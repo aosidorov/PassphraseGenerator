@@ -1,3 +1,6 @@
+$min_char = 13
+$max_char = 18
+
 $rand = new-object System.Random
 $conjunction = "the","my","we","our","and","but"
 [string[]]$words = Get-Content -Path dict.txt
@@ -10,9 +13,13 @@ if ($count -le 1000) {
     $password3 = ([char[]](Get-Random -Input $(48..57) -Count 2)) -join "" 
     $new_password = $password1+$password2+$password3
 } else {
-    $word1 = $words[$rand.Next(0,$words.Count)]
-    $con = ($conjunction[$rand.Next(0,$conjunction.Count)])
-    $word2 = $words[$rand.Next(0,$words.Count)]
-    $new_password  = $word1 + " " + $con + " " + $word2
+    do {
+        $word1 = $words[$rand.Next(0,$words.Count)]
+        $con = ($conjunction[$rand.Next(0,$conjunction.Count)])
+        $word2 = $words[$rand.Next(0,$words.Count)]
+        $new_password  = $word1 + " " + $con + " " + $word2
+        $len = $new_password.Length
+        Write-Host $new_password "($len)" 
+    } until (($len -le $max_char) -and ($len -ge $min_char))
 }
 return $new_password
